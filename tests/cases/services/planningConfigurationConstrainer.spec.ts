@@ -1,9 +1,8 @@
-import { readFileSync } from 'fs';
 import * as chai from 'chai';
-import { PlanningConfiguration, PlanningConfigurationConstrainer, PlanningRequest } from '../../../src';
+import { PlanningConfigurationConstrainer, PlanningRequest } from '../../../src';
 
-import { zeroCategoriesConfig } from './planningConfigurationConstrainer.data.ZeroCategories';
-import { zeroPoulesConfig } from './planningConfigurationConstrainer.data.zeroPoules';
+import { zeroCategoriesRequest } from './planningConfigurationConstrainer.data.ZeroCategories';
+import { zeroPoulesRequest } from './planningConfigurationConstrainer.data.zeroPoules';
 
 describe('PlanningConfigurationConstrainer', () => {
 
@@ -12,7 +11,7 @@ describe('PlanningConfigurationConstrainer', () => {
 
         // Read and parse the JSON file
         // const configuration: PlanningConfiguration = JSON.parse(readFileSync(zeroCatgeroesConfigFileName, 'utf-8'));
-        const request: PlanningRequest = zeroCategoriesConfig;
+        const request: PlanningRequest = zeroCategoriesRequest;
 
         chai.expect(() => {
             constrainer.checkConstraintCategories(request.configuration);
@@ -23,7 +22,7 @@ describe('PlanningConfigurationConstrainer', () => {
     it('Zero Poules', () => {
         const constrainer = new PlanningConfigurationConstrainer();
 
-        const request: PlanningRequest = zeroPoulesConfig;
+        const request: PlanningRequest = zeroPoulesRequest;
 
         chai.expect(() => {
             constrainer.checkConstraintCategories(request.configuration);
