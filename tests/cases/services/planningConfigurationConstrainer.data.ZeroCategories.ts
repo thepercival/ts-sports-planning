@@ -1,7 +1,7 @@
 import { GameOrder, SeatConfig, SelfRefereeScope } from "ts-sports-basics"
 import { PlanningRequest } from "../../../src"
 
-export const zeroCategoriesConfig: PlanningRequest = {
+export const zeroCategoriesRequest: PlanningRequest = {
     "configuration": {
       "categories": [        
       ],
