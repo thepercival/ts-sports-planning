@@ -7,5 +7,6 @@ export interface PlanningSport {
     nrOfCycles: number;
     nrOfRefereesPerGame: number;
     fields: PlanningField[];
+    
     selfRefereeFilters: SelfRefereeFilter[] | undefined;
 }
