@@ -1,0 +1,24 @@
+name: Release Actions
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:     
+      # - uses: shimataro/ssh-key-action@v2
+      #   with:
+      #     key: ${{secrets.SSH_TOKEN}}
+      #     # name: id_rsa # optional
+      #     known_hosts: ${{secrets.KNOWN_HOSTS}}
+          # config: #{{ secrets.CONFIG }} # ssh_config; optional
+          # if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm ci && npm run build && npm run test
+      - run: npx semantic-release
+        env:
+          NPM_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -1,0 +1,52 @@
+{
+  "name": "ts-sports-planning",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "rm -rf dist && tsc -p tsconfig.esm.json",
+    "test": "TS_NODE_PROJECT=tsconfig.test.esm.json NODE_OPTIONS='--experimental-specifier-resolution=node --no-warnings' mocha --loader=ts-node/esm 'tests/cases/**/*.spec.ts'",
+    "coverage": "c8 --check-coverage --experimental-monocart --reporter=v8 --reporter=console-details npm run test",
+    "create-types": "npx openapi-typescript https://raw.githubusercontent.com/thepercival/ts-compute-sports-planning-api/main/definitions/planning-openapi.yaml --enum -o definitions/opanapi-planning-types.d.ts",
+    "convert-types": "node scripts/convert-types-to-interfaces.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@redocly/cli": "^2.0.2",
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.10",
+    "c8": "^10.1.3",
+    "chai": "^5.2.1",
+    "mocha": "^11.7.1",
+    "monocart-coverage-reports": "^2.12.6",
+    "nyc": "^17.1.0",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "ts-sports-basics": "^1.1"
+  }
+}
