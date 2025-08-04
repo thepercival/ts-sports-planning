@@ -26,6 +26,7 @@
     "test": "TS_NODE_PROJECT=tsconfig.test.esm.json NODE_OPTIONS='--experimental-specifier-resolution=node --no-warnings' mocha --loader=ts-node/esm 'tests/cases/**/*.spec.ts'",
     "coverage": "c8 --check-coverage --experimental-monocart --reporter=v8 --reporter=console-details npm run test",
     "create-types": "npx openapi-typescript https://raw.githubusercontent.com/thepercival/ts-compute-sports-planning-api/main/definitions/planning-openapi.yaml --enum -o definitions/opanapi-planning-types.d.ts",
+    "cdk": "npx openapi-typescript https://raw.githubusercontent.com/thepercival/ts-compute-sports-planning-api/fix/openapi/definitions/planning-openapi.yaml --enum -o definitions/opanapi-planning-types.d.ts",
     "convert-types": "node scripts/convert-types-to-interfaces.mjs"
   },
   "keywords": [],

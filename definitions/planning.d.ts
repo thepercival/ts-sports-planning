@@ -13,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Generate a planning based on configuration */
+        /** Generate a planning based on request parameters */
         post: operations["generatePlanning"];
         delete?: never;
         options?: never;
@@ -30,51 +30,59 @@ export interface components {
             sports: components["schemas"]["PlanningSport"][];
             referees: components["schemas"]["PlanningReferee"][];
             gameOrder: components["schemas"]["GameOrderEnum"];
-            nrOfGamesInARow: number;
+            maxNrOfGamesInARow: {
+                forPlace?: number;
+                includeSelfRefereePlaces?: boolean;
+                forReferee?: number;
+            };
         };
         Planning: {
             planningConfiguration: components["schemas"]["PlanningConfiguration"];
-            games: (components["schemas"]["AgainstGame"] | components["schemas"]["TogetherGame"])[];
+            games: (components["schemas"]["PlanningAgainstGame"] | components["schemas"]["PlanningTogetherGame"])[];
         };
         PlanningCategory: {
             categoryNr: number;
             poules: components["schemas"]["PlanningPoule"][];
         };
         PlanningSport: {
+            sportNr?: number;
             seatConfigEnum: components["schemas"]["SeatConfigEnum"];
             nrOfCycles: number;
+            nrOfCycleParts: number;
             nrOfRefereesPerGame: number;
-            fields: components["schemas"]["Field"][];
-            selfRefereeInfo?: {
-                selfReferee: components["schemas"]["SelfRefereeEnum"];
-                nrOfSeatsPerGame: number;
-            } | null;
+            fields: components["schemas"]["PlanningField"][];
+            selfRefereeFilters?: components["schemas"]["SelfRefereeFilter"][] | null;
         };
-        AgainstSeat: components["schemas"]["HomeAwayEnum"] | components["schemas"]["NorthSouthEastWestEnum"];
+        SelfRefereeFilter: {
+            nrOfRefereesPerPlace: number;
+            scope: components["schemas"]["SelfRefereeScopeEnum"];
+            /** @description only used when scope is OtherPoules(SameCategory or OtherCategories) */
+            categoryNrs?: number[] | null;
+            /** @description only used when scope is SamePoule */
+            pouleNrs?: number[] | null;
+        };
         TogetherSeat: {
             seatNr: number;
             batchNr: number;
         };
-        Field: {
+        PlanningField: {
             fieldNr: number;
-            /** @description All poules will be used when:
-             *     - If no pouleFilters
-             *     - If no pouleNrs available
-             *     When pouleFilters are active all poules should be covered
+            /** @description There should be at least 1 item
              *      */
-            pouleFilters: {
-                categoryNr?: number;
-                pouleNrs?: number[];
-            }[];
+            pouleFilters: components["schemas"]["PlanningFieldFilter"][];
         };
-        AgainstGame: {
-            seats: components["schemas"]["AgainstSeat"][];
+        PlanningFieldFilter: {
+            categoryNrs: number[];
+            pouleNrs: number[];
+        };
+        PlanningAgainstGame: {
+            seats: (components["schemas"]["HomeAwaySeatEnum"] | components["schemas"]["NorthSouthEastWestSeatEnum"])[];
             batchNr: number;
-        } & components["schemas"]["GameProperties"];
-        TogetherGame: {
+        } & components["schemas"]["PlanningGameProperties"];
+        PlanningTogetherGame: {
             seats?: components["schemas"]["TogetherSeat"][];
-        } & components["schemas"]["GameProperties"];
-        GameProperties: {
+        } & components["schemas"]["PlanningGameProperties"];
+        PlanningGameProperties: {
             categoryNr: number;
             pouleNr: number;
             sportNr: number;
@@ -82,15 +90,12 @@ export interface components {
         };
         PlanningReferee: {
             refereeNr: number;
-            /** @description All poules will be used when:
-             *     - If no pouleFilters
-             *     - If no pouleNrs available
-             *     When pouleFilters are active all poules should be covered
+            /** @description If undefined, all categories will be used, else the categories in the array will be assigned to
              *      */
-            filters: {
-                sportNr?: number;
-                categoryNr?: number;
-            }[];
+            categoryNrs: number[] | null;
+            /** @description If undefined, all sports will be assigned to, else the sports in the array will be assigned to
+             *      */
+            sportNrs: number[] | null;
         };
         PlanningPoule: {
             pouleNr: number;
@@ -103,11 +108,11 @@ export interface components {
             places: number[];
         };
         /** @enum {string} */
-        HomeAwayEnum: HomeAwayEnum;
+        HomeAwaySeatEnum: HomeAwaySeatEnum;
         /** @enum {string} */
-        NorthSouthEastWestEnum: NorthSouthEastWestEnum;
+        NorthSouthEastWestSeatEnum: NorthSouthEastWestSeatEnum;
         /** @enum {string} */
-        SelfRefereeEnum: SelfRefereeEnum;
+        SelfRefereeScopeEnum: SelfRefereeScopeEnum;
         /** @enum {string} */
         GameOrderEnum: GameOrderEnum;
         /** @enum {string} */
@@ -158,19 +163,27 @@ export interface operations {
         };
     };
 }
-export enum HomeAwayEnum {
+export enum HomeAwaySeatEnum {
     HomeSeat = "HomeSeat",
     AwaySeat = "AwaySeat"
 }
-export enum NorthSouthEastWestEnum {
+export enum NorthSouthEastWestSeatEnum {
     NorthSeat = "NorthSeat",
     SouthSeat = "SouthSeat",
     WestSeat = "WestSeat",
     EastSeat = "EastSeat"
 }
-
+export enum SelfRefereeScopeEnum {
+    SamePoule = "SamePoule",
+    OtherPoulesSameCategory = "OtherPoulesSameCategory",
+    OtherPoulesOtherCategories = "OtherPoulesOtherCategories"
+}
 export enum GameOrderEnum {
     CycleFirst = "CycleFirst",
     PouleFirst = "PouleFirst"
 }
-
+export enum SeatConfigEnum {
+    HomeAwayEnum = "HomeAwayEnum",
+    NorthSouthEastWestEnum = "NorthSouthEastWestEnum",
+    TogetherSeatConfig = "TogetherSeatConfig"
+}
