@@ -6,7 +6,6 @@ export * from './planningField';
 export * from './planningGameProperties';
 export * from './planningPoule';
 export * from './planningReferee';
-export * from './planningRequest';
 export * from './planningSport';
 export * from './planningTogetherGame';
 export * from './planningTogetherSeat';

@@ -1,6 +1,5 @@
-import { PlanningRefereeFilter } from "./planningRefereeFilter copy";
-
 export interface PlanningReferee {
     refereeNr: number;
-    filters: PlanningRefereeFilter[];
+    categoryNrs: number[]|undefined;
+    sportNrs: number[]|undefined;
 }
